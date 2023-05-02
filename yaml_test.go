@@ -157,6 +157,16 @@ func TestParseYAML(t *testing.T) {
 			want: YAMLNode{"a": YAMLNode{"b": "v1", "c": YAMLNode{"d": "v2", "e": "v3"}, "f": []interface{}{"v4", "v5"}}, "g": []interface{}{"v6", "v7"}},
 		},
 		{
+			name: "multiline block",
+			args: args{input: "a: |\n  line1\n  line2\nb: >\n  line3\n  line4"},
+			want: YAMLNode{"a": "line1\nline2", "b": "line3 line4"},
+		},
+		{
+			name: "multiline block with empty line",
+			args: args{input: "a: |\n  line1\n  \n  line2\nb: >\n  line3\n  \n  line4"},
+			want: YAMLNode{"a": "line1\n\nline2", "b": "line3\nline4"},
+		},
+		{
 			name: "divider",
 			args: args{input: "---\na: v1\n---\nb: v2"},
 			want: YAMLNode{"a": "v1"},

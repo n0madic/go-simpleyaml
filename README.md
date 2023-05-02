@@ -12,6 +12,7 @@ Advantages:
 - No dependencies
 - No reflection
 - Supported value types: `string`, `int64`, `float64`, `bool`, `list`, `map`
+- Supported a simple multiline blocks, `|` and `>`
 - Access to the value by path (e.g. `yamlMap.Path("root[0].key")`)
 
 Disadvantages:

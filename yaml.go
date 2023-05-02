@@ -110,6 +110,35 @@ func parseYAMLLines(lines []string) YAMLNode {
 					i += childLines
 					node[key] = childNode
 				}
+			} else if strings.HasPrefix(value, "|") || strings.HasPrefix(value, ">") {
+				// parse multiline block
+				var blockLines []string
+				i++
+				indent := getIndent(lines[i])
+				for i < len(lines) {
+					if getIndent(lines[i]) < indent {
+						break
+					}
+					line := strings.TrimSpace(lines[i])
+					if line == "" {
+						if strings.HasPrefix(value, ">") {
+							blockLines = append(blockLines, "\n")
+						} else {
+							blockLines = append(blockLines, "")
+						}
+					} else {
+						blockLines = append(blockLines, line)
+					}
+					i++
+				}
+				i--
+				if strings.HasPrefix(value, ">") {
+					result := strings.Join(blockLines, " ")
+					result = strings.Replace(result, " \n ", "\n", -1)
+					node[key] = result
+				} else {
+					node[key] = strings.Join(blockLines, "\n")
+				}
 			} else {
 				node[key] = parseValue(value)
 			}
